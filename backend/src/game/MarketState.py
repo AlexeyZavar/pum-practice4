@@ -6,8 +6,8 @@ LEVELS = {
     1: {
         'total_ore': lambda p: int(1.0 * p),
         'airships_demand': lambda p: int(3.0 * p),
-        'minimal_price': 800_000,
-        'maximal_price': 6_500_000,
+        'minimal_price': 800,
+        'maximal_price': 6_500,
         'chances': {
             1: 1 / 3,
             2: 1 / 3,
@@ -19,8 +19,8 @@ LEVELS = {
     2: {
         'total_ore': lambda p: int(1.5 * p),
         'airships_demand': lambda p: int(2.5 * p),
-        'minimal_price': 650_000,
-        'maximal_price': 6_000_000,
+        'minimal_price': 650,
+        'maximal_price': 6_000,
         'chances': {
             1: 1 / 4,
             2: 1 / 3,
@@ -32,8 +32,8 @@ LEVELS = {
     3: {
         'total_ore': lambda p: int(2.0 * p),
         'airships_demand': lambda p: int(2.0 * p),
-        'minimal_price': 500_000,
-        'maximal_price': 5_500_000,
+        'minimal_price': 500,
+        'maximal_price': 5_500,
         'chances': {
             1: 1 / 12,
             2: 1 / 4,
@@ -45,8 +45,8 @@ LEVELS = {
     4: {
         'total_ore': lambda p: int(2.5 * p),
         'airships_demand': lambda p: int(1.5 * p),
-        'minimal_price': 400_000,
-        'maximal_price': 5_000_000,
+        'minimal_price': 400,
+        'maximal_price': 5_000,
         'chances': {
             1: 1 / 12,
             2: 1 / 12,
@@ -58,8 +58,8 @@ LEVELS = {
     5: {
         'total_ore': lambda p: int(3.0 * p),
         'airships_demand': lambda p: int(1.0 * p),
-        'minimal_price': 300_000,
-        'maximal_price': 4_500_000,
+        'minimal_price': 300,
+        'maximal_price': 4_500,
         'chances': {
             1: 1 / 12,
             2: 1 / 12,

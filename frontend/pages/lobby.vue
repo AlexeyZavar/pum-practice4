@@ -7,7 +7,7 @@
       </p>
       <div v-for="player in $game.lobby_manager.lobby.users" :key="player.user.id">
         <div class="flex items-center space-x-10">
-          <img :alt="player.user.name + `'s avatar`" :src="player.user.avatar" class="avatar">
+          <user-avatar :user="player.user" />
           <p class="text-xl font-bold">
             {{ player.user.name }} ({{ player.ready ? 'готов' : 'не готов' }})
           </p>

@@ -1,11 +1,13 @@
 import { io, Socket } from 'socket.io-client'
-import { GameUpdated, LobbyUpdated } from '~/kb_client/Events'
+import { GameNewMessage, GameUpdated, LobbyUpdated } from '~/kb_client/Events'
 import { Session } from '~/kb_client/models/Session'
 import { GameLobby } from '~/kb_client/models/Lobby'
 import { Player } from '~/kb_client/models/Player'
+import { Message } from '~/kb_client/models/Message'
 
 export class GameManager {
   session: Session
+  messages: Message[]
   private socket: Socket
 
   constructor (socket: Socket) {
@@ -19,7 +21,7 @@ export class GameManager {
             avatar: 'https://avatarfiles.alphacoders.com/307/thumb-1920-307713.jpg',
             name: 'AlexeyZavar'
           },
-          money: 10_000_000,
+          money: 10_000,
           workshops: 2,
           ore: 4,
           airships: 2
@@ -30,7 +32,7 @@ export class GameManager {
             avatar: 'https://avatarfiles.alphacoders.com/302/thumb-1920-302953.png',
             name: 'Hu Tao'
           },
-          money: 20_000_000,
+          money: 20_000,
           workshops: 3,
           ore: 1,
           airships: 1
@@ -40,25 +42,23 @@ export class GameManager {
         level: 3,
         total_ore: 2,
         airships_demand: 3,
-        minimal_price: 300_000,
-        maximal_price: 4_500_000
+        minimal_price: 300,
+        maximal_price: 4_500
       },
-      messages: [
-        {
-          user_id: '1',
-          date: new Date().getTime(),
-          text: 'Всем привет!'
-        },
-        {
-          user_id: '2',
-          date: new Date().getTime(),
-          text: 'Я тебя разнесу..!'
-        }
-      ]
+      queue: ['1', '2']
     }
+    this.messages = []
 
     this.socket.on('game_updated', args => this.game_updated(args))
     this.socket.on('game_new_message', args => this.game_new_message(args))
+  }
+
+  send_message (text: string) {
+    this.socket.emit('game_send_message', { text })
+  }
+
+  make_move (move: any) {
+    this.socket.emit('game_make_move', move)
   }
 
   get_player (userId: string): Player | undefined {
@@ -73,8 +73,8 @@ export class GameManager {
     this.session = args
   }
 
-  private game_new_message (args: any) {
-
+  private game_new_message (args: GameNewMessage) {
+    this.messages.push(args)
   }
 }
 
