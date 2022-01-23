@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Flask, request
 from flask_jwt_extended import current_user, get_current_user
 from flask_socketio import Namespace, join_room
@@ -8,6 +10,10 @@ from src.server.sessions.SessionHub import SessionHub
 
 lobby_hub = LobbyHub()
 session_hub = SessionHub()
+
+
+def now():
+    return int((datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds() * 1000)
 
 
 class KBPumNamespace(Namespace):
@@ -23,8 +29,13 @@ class KBPumNamespace(Namespace):
             lobby = lobby_hub.remove_user(current_user)
             self.emit('lobby_updated', lobby.dictify(), room=lobby.lobby_id)
 
+        if session_hub.has_session(current_user):
+            session = session_hub.get_session(current_user)
+            session.remove_player(current_user)
+            self.emit('game_updated', session.dictify(), room=session.session_id)
+
     @ws_authenticated
-    def on_create_lobby(self):
+    def on_create_lobby(self, message=None):
         self.app.logger.warn(f'User {current_user.name} creates lobby.')
 
         if lobby_hub.has_lobby(current_user):
@@ -39,7 +50,7 @@ class KBPumNamespace(Namespace):
         self.emit('lobby_updated', lobby.dictify(), room=lobby.lobby_id)
 
     @ws_authenticated
-    def on_join_lobby(self, message):
+    def on_join_lobby(self, message=None):
         if lobby_hub.has_lobby(current_user):
             self.app.logger.warn('User tried to join a lobby while being in the lobby.')
             self.emit('lobby_probe', {'success': False}, room=request.sid)
@@ -72,3 +83,23 @@ class KBPumNamespace(Namespace):
 
             self.emit('game_updated', session.dictify(), room=lobby.lobby_id)
             self.emit('game_started', room=lobby.lobby_id)
+
+    @ws_authenticated
+    def on_game_send_message(self, message=None):
+        session = session_hub.get_session(current_user)
+
+        self.emit('game_new_message', {'user_id': current_user.id, 'date': now(), 'text': message['text']},
+                  room=session.session_id)
+
+    @ws_authenticated
+    def on_game_make_move(self, message=None):
+        session = session_hub.get_session(current_user)
+
+        session.trigger_move(get_current_user(), **message)
+
+        for message in session.messages_queue:
+            self.emit('game_new_message', {'user_id': None, 'date': now(), 'text': message})
+
+        session.messages_queue.clear()
+
+        self.emit('game_updated', session.dictify(), room=session.session_id)

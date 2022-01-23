@@ -19,6 +19,10 @@ dictConfig({
     'root': {
         'level': 'INFO',
         'handlers': ['wsgi']
+    },
+    'Session': {
+        'level': 'DEBUG',
+        'handlers': ['wsgi']
     }
 })
 

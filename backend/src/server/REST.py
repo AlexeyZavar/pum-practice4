@@ -58,4 +58,4 @@ def login():
 @rest.get('/me')
 @jwt_required()
 def me():
-    return jsonify(user={'name': current_user.name, 'avatar': current_user.avatar})
+    return jsonify(user={'id': current_user.id, 'name': current_user.name, 'avatar': current_user.avatar})

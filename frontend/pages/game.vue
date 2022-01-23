@@ -10,7 +10,7 @@
       <div
         class="h-full overflow-y-scroll scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-poetry-600 divide-y"
       >
-        <chat-message v-for="(message, i) in $game.game_manager.messages" :key="i" :message="message" />
+        <chat-message v-for="(message, i) in $game.game_manager.messages" :key="i" :ref="i" :message="message" />
       </div>
       <input v-model="chatMessage" class="p-4 border-y outline-none" type="text" @keydown.enter="send_message">
     </div>
@@ -31,6 +31,7 @@
             <select v-model="selectedPlayer" class="w-auto" name="stats_player">
               <option v-for="player in $game.game_manager.session.players" :key="player.user.id" :value="player">
                 {{ player.user.name }}
+                {{ player.dead ? ' (банкрот)' : '' }}
               </option>
             </select>
           </div>
@@ -110,13 +111,13 @@
               </p>
               <div class="w-2/5 flex flex-col space-y-4">
                 <div class="flex flex-row space-x-4 justify-between">
-                  <p class="w-20">
+                  <p class="w-24">
                     Купить
                   </p>
                   <div class="flex flex-row space-x-2">
                     <input
-                      v-model="move.ore_request_amount"
-                      class="w-20 px-2 border rounded-2xl outline-none"
+                      v-model.number="move.ore_request_amount"
+                      class="w-24 px-2 border rounded-2xl outline-none"
                       min="0"
                       type="number"
                     >
@@ -125,22 +126,23 @@
                   <p>за</p>
                   <div class="flex flex-row space-x-2">
                     <input
-                      v-model="move.ore_request_price"
-                      class="w-20 px-2 border rounded-2xl outline-none"
-                      min="0"
+                      v-model.number="move.ore_request_price"
+                      :min="$game.game_manager.session.market_state.minimal_price"
+                      class="w-24 px-2 border rounded-2xl outline-none"
                       type="number"
                     >
                     <img alt="" src="~/assets/images/money.svg" width="24">
                   </div>
                 </div>
                 <div class="flex flex-row space-x-4 justify-between">
-                  <p class="w-20">
+                  <p class="w-24">
                     Продать
                   </p>
                   <div class="flex flex-row space-x-2">
                     <input
-                      v-model="move.sell_request_amount"
-                      class="w-20 px-2 border rounded-2xl outline-none"
+                      v-model.number="move.sell_request_amount"
+                      :max="current_player.airships"
+                      class="w-24 px-2 border rounded-2xl outline-none"
                       min="0"
                       type="number"
                     >
@@ -149,23 +151,23 @@
                   <p>за</p>
                   <div class="flex flex-row space-x-2">
                     <input
-                      v-model="move.sell_request_price"
-                      class="w-20 px-2 border rounded-2xl outline-none"
-                      min="0"
+                      v-model.number="move.sell_request_price"
+                      :max="$game.game_manager.session.market_state.maximal_price"
+                      class="w-24 px-2 border rounded-2xl outline-none"
                       type="number"
                     >
                     <img alt="" src="~/assets/images/money.svg" width="24">
                   </div>
                 </div>
                 <div class="flex flex-row space-x-4 justify-between">
-                  <p class="w-20">
+                  <p class="w-24">
                     Изготовить
                   </p>
                   <div class="flex flex-row space-x-2">
                     <input
-                      v-model="move.airships_amount"
-                      class="w-20 px-2 border rounded-2xl outline-none"
-                      min="0"
+                      v-model.number="move.airships_amount"
+                      :min="0"
+                      class="w-24 px-2 border rounded-2xl outline-none"
                       type="number"
                     >
                     <img alt="" src="~/assets/images/airship.svg" width="24">
@@ -215,11 +217,21 @@ export default Vue.extend({
   },
   computed: {
     modalShown () {
-      console.log(this.$auth.loggedIn, this.$game.game_manager.session?.queue, this.$game.game_manager.session?.queue[0], this.$auth.user?.id, this.$auth.user)
-      return this.$game.game_manager.session?.queue[0] === this.$auth.user?.id
+      return !this.$game.game_manager.session.ended && this.$game.game_manager.session?.queue[0] === this.$auth.user?.id
     },
     moveValid () {
-
+      return true
+    },
+    current_player () {
+      // @ts-ignore
+      return this.$game.game_manager.get_player(this.$auth.user.id)
+    }
+  },
+  watch: {
+    scrollDownOnNewMessage () {
+      const msg = this.$refs[this.$game.game_manager.messages.length - 1] as Element
+      console.log(msg)
+      msg.scrollIntoView({ behavior: 'smooth' })
     }
   },
   methods: {
@@ -231,6 +243,15 @@ export default Vue.extend({
     },
     make_move () {
       this.$game.game_manager.make_move(this.move)
+
+      this.move = {
+        ore_request_amount: 0,
+        ore_request_price: 0,
+        airships_amount: 0,
+        sell_request_amount: 0,
+        sell_request_price: 0,
+        build_workshop: false
+      }
     }
   }
 })

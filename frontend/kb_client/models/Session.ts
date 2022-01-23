@@ -6,4 +6,5 @@ export interface Session {
   players: Player[]
   market_state: MarketState
   queue: string[]
+  ended: boolean
 }

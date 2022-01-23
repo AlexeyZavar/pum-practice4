@@ -6,4 +6,5 @@ export interface Player {
   workshops: number
   ore: number
   airships: number
+  dead: boolean
 }

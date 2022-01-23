@@ -81,6 +81,7 @@ class MarketState:
             list(LEVELS[self.level]['chances'].keys()),
             list(LEVELS[self.level]['chances'].values())
         )[0]
+        self.state = LEVELS[self.level]
 
     def dictify(self, p):
         return {

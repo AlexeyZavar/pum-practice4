@@ -24,7 +24,8 @@ export class GameManager {
           money: 10_000,
           workshops: 2,
           ore: 4,
-          airships: 2
+          airships: 2,
+          dead: false
         },
         {
           user: {
@@ -35,7 +36,8 @@ export class GameManager {
           money: 20_000,
           workshops: 3,
           ore: 1,
-          airships: 1
+          airships: 1,
+          dead: false
         }
       ],
       market_state: {
@@ -45,7 +47,8 @@ export class GameManager {
         minimal_price: 300,
         maximal_price: 4_500
       },
-      queue: ['1', '2']
+      queue: ['1', '2'],
+      ended: false
     }
     this.messages = []
 
@@ -66,6 +69,19 @@ export class GameManager {
       if (player.user.id === userId) {
         return player
       }
+    }
+
+    return {
+      user: {
+        id: 'SYSTEM',
+        avatar: 'https://avatarfiles.alphacoders.com/307/thumb-1920-307195.gif',
+        name: 'СИСТЕМА'
+      },
+      money: 1,
+      workshops: 0,
+      airships: 0,
+      ore: 0,
+      dead: false
     }
   }
 
