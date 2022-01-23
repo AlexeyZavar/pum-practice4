@@ -7,7 +7,9 @@
           Чат
         </p>
       </div>
-      <div class="h-full overflow-y-scroll scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-poetry-600 divide-y">
+      <div
+        class="h-full overflow-y-scroll scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-poetry-600 divide-y"
+      >
         <chat-message v-for="(message, i) in $game.game_manager.session.messages" :key="i" :message="message" />
       </div>
       <input class="p-4 border-y outline-none" type="text">
@@ -22,7 +24,7 @@
         <div class="card">
           <div class="flex flex-row justify-center space-x-4">
             <p>Статистика</p>
-            <select v-model="selectedPlayer" name="stats_player" class="w-auto">
+            <select v-model="selectedPlayer" class="w-auto" name="stats_player">
               <option v-for="player in $game.game_manager.session.players" :key="player.user.id" :value="player">
                 {{ player.user.name }}
               </option>
@@ -33,10 +35,24 @@
           </div>
           <div class="flex justify-center">
             <div class="flex flex-col">
-              <p><span class="font-bold">Баланс:</span> {{ selectedPlayer.money }} ₽</p>
-              <p><span class="font-bold">Мастерских:</span> {{ selectedPlayer.workshops }} шт.</p>
-              <p><span class="font-bold">Руды:</span> {{ selectedPlayer.ore }} шт.</p>
-              <p><span class="font-bold">Самолётов:</span> {{ selectedPlayer.airships }} шт.</p>
+              <div class="flex flex-row space-x-4">
+                <img alt="" src="~/assets/images/money.svg" width="24">
+                <p>
+                  <span class="font-bold">Баланс:</span> {{ selectedPlayer.money }} ₽
+                </p>
+              </div>
+              <div class="flex flex-row space-x-4">
+                <img alt="" src="~/assets/images/workshop.svg" width="24">
+                <p><span class="font-bold">Мастерских:</span> {{ selectedPlayer.workshops }} шт.</p>
+              </div>
+              <div class="flex flex-row space-x-4">
+                <img alt="" src="~/assets/images/ore.svg" width="24">
+                <p><span class="font-bold">Руды:</span> {{ selectedPlayer.ore }} шт.</p>
+              </div>
+              <div class="flex flex-row space-x-4">
+                <img alt="" src="~/assets/images/airship.svg" width="24">
+                <p><span class="font-bold">Самолётов:</span> {{ selectedPlayer.airships }} шт.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -46,11 +62,38 @@
           </div>
           <div class="mt-40 flex justify-center">
             <div class="flex flex-col">
-              <p><span class="font-bold">Уровень:</span> {{ $game.game_manager.session.market_state.level }} (символ звезды)</p>
-              <p><span class="font-bold">Доступно руды:</span> {{ $game.game_manager.session.market_state.total_ore }} шт.</p>
-              <p><span class="font-bold">Спрос на самолёты:</span> {{ $game.game_manager.session.market_state.airships_demand }} шт.</p>
-              <p><span class="font-bold">Мин. цена покупки руды:</span> {{ $game.game_manager.session.market_state.minimal_price }} ₽</p>
-              <p><span class="font-bold">Макс. цена продажи самолётов:</span> {{ $game.game_manager.session.market_state.maximal_price }} ₽</p>
+              <div class="flex flex-row space-x-4">
+                <img alt="" src="~/assets/images/level.svg" width="24">
+                <p><span class="font-bold">Уровень:</span> {{ $game.game_manager.session.market_state.level }} ★</p>
+              </div>
+              <div class="flex flex-row space-x-4">
+                <img alt="" src="~/assets/images/ore.svg" width="24">
+                <p>
+                  <span class="font-bold">Доступно руды:</span> {{ $game.game_manager.session.market_state.total_ore }}
+                  шт.
+                </p>
+              </div>
+              <div class="flex flex-row space-x-4">
+                <img alt="" src="~/assets/images/airship.svg" width="24">
+                <p>
+                  <span class="font-bold">Спрос на самолёты:</span>
+                  {{ $game.game_manager.session.market_state.airships_demand }} шт.
+                </p>
+              </div>
+              <div class="flex flex-row space-x-4">
+                <img alt="" src="~/assets/images/buy.svg" width="24">
+                <p>
+                  <span class="font-bold">Мин. цена покупки руды:</span>
+                  {{ $game.game_manager.session.market_state.minimal_price }} ₽
+                </p>
+              </div>
+              <div class="flex flex-row space-x-4">
+                <img alt="" src="~/assets/images/sell.svg" width="24">
+                <p>
+                  <span class="font-bold">Макс. цена продажи самолётов:</span>
+                  {{ $game.game_manager.session.market_state.maximal_price }} ₽
+                </p>
+              </div>
             </div>
           </div>
         </div>

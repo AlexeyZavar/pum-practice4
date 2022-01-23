@@ -31,7 +31,9 @@ export default Vue.extend({
     },
     message_date () {
       return new Date(this.message.date).toLocaleString('ru-RU', {
-        hour: 'numeric', minute: 'numeric', second: 'numeric'
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
       })
     }
   }

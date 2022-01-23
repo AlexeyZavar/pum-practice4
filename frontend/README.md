@@ -16,3 +16,5 @@ $ yarn start
 # generate static project
 $ yarn generate
 ```
+
+## Icons by Icons8

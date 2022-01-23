@@ -1,5 +1,10 @@
 <template>
-  <img :src="user.avatar" :alt="user.name" class="rounded-full" :class="{'w-8 h-8': size === 'mini', 'w-16 h-16': size === 'small', 'w-24 h-24': size === 'medium'}">
+  <img
+    :alt="user.name"
+    :class="{'w-8 h-8': size === 'mini', 'w-16 h-16': size === 'small', 'w-24 h-24': size === 'medium'}"
+    :src="user.avatar"
+    class="rounded-full"
+  >
 </template>
 
 <script lang="ts">

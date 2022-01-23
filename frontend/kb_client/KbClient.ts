@@ -85,7 +85,10 @@ export class LobbyManager {
 
   constructor (socket: Socket) {
     this.socket = socket
-    this.lobby = { id: 'none', users: [] }
+    this.lobby = {
+      id: 'none',
+      users: []
+    }
     this.ready = false
 
     this.socket.on('lobby_updated', args => this.lobby_updated(args))
