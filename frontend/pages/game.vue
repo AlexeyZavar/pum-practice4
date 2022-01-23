@@ -7,8 +7,8 @@
           Чат
         </p>
       </div>
-      <div class="h-full overflow-y-scroll scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-poetry-600">
-        <chat-message v-for="i in 20" :key="i" />
+      <div class="h-full overflow-y-scroll scrollbar scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-poetry-600 divide-y">
+        <chat-message v-for="(message, i) in $game.game_manager.session.messages" :key="i" :message="message" />
       </div>
       <input class="p-4 border-y outline-none" type="text">
     </div>
@@ -16,29 +16,27 @@
     <div class="w-4/5 h-screen flex flex-col">
       <!-- QUEUE -->
       <div class="h-24 p-4 border-b flex flex-row space-x-4">
-        <img class="avatar" src="https://avatarfiles.alphacoders.com/307/thumb-1920-307713.jpg" alt="">
-        <img class="avatar" src="https://avatarfiles.alphacoders.com/307/thumb-1920-307713.jpg" alt="">
-        <img class="avatar" src="https://avatarfiles.alphacoders.com/307/thumb-1920-307713.jpg" alt="">
+        <user-avatar v-for="player in $game.game_manager.session.players" :key="player.user.id" :user="player.user" />
       </div>
       <div class="p-8 h-full grid grid-cols-2 gap-8">
         <div class="card">
           <div class="flex flex-row justify-center space-x-4">
             <p>Статистика</p>
-            <select name="stats_player" class="w-auto">
-              <option value="AlexeyZavar">
-                AlexeyZavar
+            <select v-model="selectedPlayer" name="stats_player" class="w-auto">
+              <option v-for="player in $game.game_manager.session.players" :key="player.user.id" :value="player">
+                {{ player.user.name }}
               </option>
             </select>
           </div>
-          <div class="p-4 flex justify-center">
-            <img class="avatar" src="https://avatarfiles.alphacoders.com/307/thumb-1920-307713.jpg" alt="">
+          <div class="mt-16 p-4 flex justify-center">
+            <user-avatar :user="selectedPlayer.user" size="medium" />
           </div>
           <div class="flex justify-center">
             <div class="flex flex-col">
-              <p><span class="font-bold">Баланс:</span> 1 916 000 ₽</p>
-              <p><span class="font-bold">Мастерских:</span> 4 шт.</p>
-              <p><span class="font-bold">Руды:</span> 10 шт.</p>
-              <p><span class="font-bold">Самолётов:</span> 6 шт.</p>
+              <p><span class="font-bold">Баланс:</span> {{ selectedPlayer.money }} ₽</p>
+              <p><span class="font-bold">Мастерских:</span> {{ selectedPlayer.workshops }} шт.</p>
+              <p><span class="font-bold">Руды:</span> {{ selectedPlayer.ore }} шт.</p>
+              <p><span class="font-bold">Самолётов:</span> {{ selectedPlayer.airships }} шт.</p>
             </div>
           </div>
         </div>
@@ -46,13 +44,13 @@
           <div class="flex flex-row justify-center space-x-4">
             <p>Ситуация на рынке</p>
           </div>
-          <div class="mt-16 flex justify-center">
+          <div class="mt-40 flex justify-center">
             <div class="flex flex-col">
-              <p><span class="font-bold">Уровень:</span> 5 (символ звезды)</p>
-              <p><span class="font-bold">Доступно руды:</span> 30 шт.</p>
-              <p><span class="font-bold">Спрос на самолёты:</span> 20 шт.</p>
-              <p><span class="font-bold">Мин. цена покупки руды:</span> 300 000 ₽</p>
-              <p><span class="font-bold">Макс. цена продажи самолётов:</span> 4 500 000 ₽</p>
+              <p><span class="font-bold">Уровень:</span> {{ $game.game_manager.session.market_state.level }} (символ звезды)</p>
+              <p><span class="font-bold">Доступно руды:</span> {{ $game.game_manager.session.market_state.total_ore }} шт.</p>
+              <p><span class="font-bold">Спрос на самолёты:</span> {{ $game.game_manager.session.market_state.airships_demand }} шт.</p>
+              <p><span class="font-bold">Мин. цена покупки руды:</span> {{ $game.game_manager.session.market_state.minimal_price }} ₽</p>
+              <p><span class="font-bold">Макс. цена продажи самолётов:</span> {{ $game.game_manager.session.market_state.maximal_price }} ₽</p>
             </div>
           </div>
         </div>
@@ -63,10 +61,18 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Player } from '~/kb_client/models/Player'
 
 export default Vue.extend({
   name: 'GamePage',
-  layout: 'game'
+  layout: 'game',
+  data () {
+    const selectedPlayer: Player = this.$game.game_manager.session.players[0]
+
+    return {
+      selectedPlayer
+    }
+  }
 })
 </script>
 

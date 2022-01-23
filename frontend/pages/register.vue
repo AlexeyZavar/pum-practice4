@@ -10,7 +10,7 @@
     <input v-model="form.avatar" class="inp" placeholder="Аватарка" type="text">
     <div class="p-4 flex flex-col space-y-4 text-center items-center justify-center border rounded-2xl">
       <p>Превью аватарки</p>
-      <img :src="form.avatar" alt="" class="avatar">
+      <user-avatar :user="form" />
     </div>
     <button class="btn" @click="register_account">
       Зарегистрироваться

@@ -85,12 +85,10 @@ class MarketState:
     def dictify(self, p):
         return {
             'level': self.level,
-            'state': {
-                'total_ore': self.state['total_ore'](p),
-                'airships_demand': self.state['airships_demand'](p),
-                'minimal_price': self.state['minimal_price'],
-                'maximal_price': self.state['maximal_price'],
-            }
+            'total_ore': self.state['total_ore'](p),
+            'airships_demand': self.state['airships_demand'](p),
+            'minimal_price': self.state['minimal_price'],
+            'maximal_price': self.state['maximal_price'],
         }
 
     def __str__(self):
