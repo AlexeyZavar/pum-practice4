@@ -9,7 +9,7 @@
         <div class="flex items-center space-x-10">
           <user-avatar :user="player.user" />
           <p class="text-xl font-bold">
-            {{ player.user.name }} ({{ player.ready ? 'готов' : 'не готов' }})
+            {{ player.user.name }} {{ player.ready ? '🔥' : '⚡' }}
           </p>
         </div>
       </div>

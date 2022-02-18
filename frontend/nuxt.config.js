@@ -42,7 +42,8 @@ export default {
     {
       src: '~/plugins/gamePlugin',
       mode: 'client'
-    }
+    },
+    '~/plugins/particlesPlugin'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

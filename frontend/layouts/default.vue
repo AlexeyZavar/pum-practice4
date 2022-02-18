@@ -1,9 +1,10 @@
 <template>
   <div class="w-screen h-screen flex flex-col justify-center items-center">
-    <div class="w-full md:w-1/2 2xl:w-1/4 p-8 shadow-lg border rounded-2xl">
+    <particles id="background-particles" url="particlesjs-config.json" />
+    <div class="backdrop-blur w-full md:w-1/2 2xl:w-1/4 p-8 shadow-lg border rounded-2xl">
       <div class="border-b">
         <p class="font-bold text-xl text-center">
-          КБ ПУМ
+          💸 КБ ПУМ ✈️
         </p>
       </div>
       <nuxt />

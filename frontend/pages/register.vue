@@ -9,13 +9,15 @@
     <input v-model="form.password" class="inp" placeholder="Пароль" type="password">
     <input v-model="form.avatar" class="inp" placeholder="Аватарка" type="text">
     <div class="p-4 flex flex-col space-y-4 text-center items-center justify-center border rounded-2xl">
-      <p>Превью аватарки</p>
+      <p class="font-bold">
+        Превью аватарки
+      </p>
       <user-avatar :user="form" />
     </div>
     <button class="btn" @click="register_account">
       Зарегистрироваться
     </button>
-    <button class="btn" @click="$router.push('/login')">
+    <button class="btn" @click="$router.push('login')">
       →
     </button>
   </div>

@@ -6,24 +6,24 @@
 
 body {
   @apply font-nunito;
-  @apply bg-sky-100 text-sky-900;
+  @apply text-white bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-400;
   @apply select-none;
 }
 
 * {
-  @apply border-sky-800;
+  @apply border-white;
 }
 
 .btn {
   @apply p-4 border rounded-2xl;
   @apply transition duration-200;
-  @apply hover:bg-sky-900 hover:text-sky-100;
+  @apply hover:bg-purple-400;
 }
 
 .inp {
   @apply outline-none;
   @apply p-3 border rounded-2xl;
-  @apply text-2xl font-bold text-center;
+  @apply text-2xl text-black font-bold text-center;
 }
 
 .main-container {
@@ -34,4 +34,9 @@ body {
   @apply p-4 main-container;
   @apply text-center bg-sky-200 text-red-500;
   @apply border rounded-2xl;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+  @apply hidden;
 }

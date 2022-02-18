@@ -17,16 +17,24 @@ declare module '@nuxt/types' {
   }
 }
 
-const socket: Plugin = (_, inject) => {
-  const value = `; ${document.cookie}`
-  const parts = value.split('; auth._token.local=')
+export function getToken () {
+  try {
+    const value = `; ${document.cookie}`
+    const parts = value.split('; auth._token.local=')
 
-  let token = ''
-  if (parts && parts.length === 2) {
-    token = parts.pop()!.split(';').shift()!.replace('Bearer%20', '')
+    let token = ''
+    if (parts && parts.length === 2) {
+      token = parts.pop()!.split(';').shift()!.replace('Bearer%20', '')
+    }
+
+    return token
+  } catch {
+    return ''
   }
+}
 
-  const client = Vue.observable(new KbClient(token))
+const socket: Plugin = (_, inject) => {
+  const client = Vue.observable(new KbClient(getToken()))
 
   inject('socket', client.socket)
   inject('game', client)

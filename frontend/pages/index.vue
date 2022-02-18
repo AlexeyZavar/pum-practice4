@@ -20,6 +20,10 @@ export default Vue.extend({
   name: 'IndexPage',
   mounted () {
     this.$socket.on('lobby_created', this.lobby_created)
+
+    if (this.$game.token === '') {
+      location.reload()
+    }
   },
   beforeDestroy () {
     this.$socket.offAny(this.lobby_created)
@@ -32,7 +36,7 @@ export default Vue.extend({
       this.$router.push('join')
     },
     lobby_created (args: LobbyCreated) {
-      this.$router.push('/lobby')
+      this.$router.push('lobby')
     }
   }
 })
