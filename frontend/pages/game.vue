@@ -230,7 +230,6 @@ export default Vue.extend({
       this.$nextTick(() => {
         // @ts-ignore
         const msg = this.$refs[this.$game.game_manager.messages.length - 1][0] as Vue
-        console.log(this.$refs, msg, msg.$el)
         msg.$el.scrollIntoView({ behavior: 'smooth' })
       })
     })

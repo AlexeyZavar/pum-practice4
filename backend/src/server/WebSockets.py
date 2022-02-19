@@ -33,6 +33,13 @@ class KBPumNamespace(Namespace):
         if session_hub.has_session(current_user):
             session = session_hub.get_session(current_user)
             session.remove_player(current_user)
+
+            db_session = DBSession()
+            user = db_session.get(User, current_user.id)
+            user.looses += 1
+
+            db_session.commit()
+
             self.emit('game_updated', session.dictify(), room=session.session_id)
 
     @ws_authenticated
