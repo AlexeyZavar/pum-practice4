@@ -2,14 +2,11 @@ import logging
 import random
 from typing import List, Tuple
 
-from .AirshipRequest import AirshipRequest
-from .AirshipsSellRequest import AirshipsSellRequest
+from src.game.requests import *
+from src.server import User
 from .GameException import GameException
 from .MarketState import MarketState
-from .OreRequest import OreRequest
 from .Player import Player
-from .WorkshopBuildRequest import WorkshopBuildRequest
-from ..server.Database import User
 
 AIRSHIP_COST = 2_000
 WORKSHOP_COST = 5_000
@@ -56,6 +53,9 @@ class Session:
 
         self.queue.remove(player)
         self.players.remove(player)
+
+        if player == self.initial_player:
+            self.initial_player = self.queue[0]
 
         preds = [req for req in self.ore_requests if req.user.id == user.id]
         for r in preds:

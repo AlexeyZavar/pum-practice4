@@ -1,4 +1,4 @@
-from src.server.Database import User
+from src.server import User
 
 INITIAL_MONEY = 10_000
 INITIAL_WORKSHOPS = 2

@@ -118,7 +118,7 @@
                     <input
                       v-model.number="move.ore_request_amount"
                       :max="$game.game_manager.session.market_state.total_ore"
-                      class="w-24 px-2 border rounded-2xl outline-none"
+                      class="inp2"
                       min="0"
                       type="number"
                     >
@@ -129,7 +129,7 @@
                     <input
                       v-model.number="move.ore_request_price"
                       :min="$game.game_manager.session.market_state.minimal_price"
-                      class="w-24 px-2 border rounded-2xl outline-none"
+                      class="inp2"
                       type="number"
                     >
                     <img alt="" src="~/assets/images/money.svg" width="24">
@@ -143,7 +143,7 @@
                     <input
                       v-model.number="move.sell_request_amount"
                       :max="current_player.airships"
-                      class="w-24 px-2 border rounded-2xl outline-none"
+                      class="inp2"
                       min="0"
                       type="number"
                     >
@@ -154,7 +154,7 @@
                     <input
                       v-model.number="move.sell_request_price"
                       :max="$game.game_manager.session.market_state.maximal_price"
-                      class="w-24 px-2 border rounded-2xl outline-none"
+                      class="inp2"
                       type="number"
                     >
                     <img alt="" src="~/assets/images/money.svg" width="24">
@@ -168,7 +168,7 @@
                     <input
                       v-model.number="move.airships_amount"
                       :min="0"
-                      class="w-24 px-2 border rounded-2xl outline-none"
+                      class="inp2"
                       type="number"
                     >
                     <img alt="" src="~/assets/images/airship.svg" width="24">
@@ -220,9 +220,6 @@ export default Vue.extend({
     modalShown () {
       return !this.$game.game_manager.session.ended && this.$game.game_manager.session?.queue[0] === this.$auth.user?.id
     },
-    moveValid () {
-      return true
-    },
     current_player () {
       // @ts-ignore
       return this.$game.game_manager.get_player(this.$auth.user.id)
@@ -244,9 +241,12 @@ export default Vue.extend({
         for (const player of this.$game.game_manager.session.players) {
           if (player.user.id === current.user.id) {
             this.selectedPlayer = player
-            break
+            return
           }
         }
+
+        // видимо чел дал по съ***** из игры
+        this.selectedPlayer = this.$game.game_manager.session.players[0]
       })
     })
   },
@@ -285,5 +285,9 @@ export default Vue.extend({
 select {
   @apply outline-none;
   @apply px-2 rounded-2xl;
+}
+
+.inp2 {
+  @apply w-24 px-2 border border-black rounded-2xl outline-none;
 }
 </style>
