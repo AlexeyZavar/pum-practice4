@@ -16,7 +16,7 @@ def register():
     password = request.json['password']
     avatar = request.json['avatar']
 
-    if not name or not password or not avatar:
+    if not name or not password:
         return jsonify(success=False), 400
 
     session = DBSession()
@@ -59,3 +59,14 @@ def login():
 @jwt_required()
 def me():
     return jsonify(user={'id': current_user.id, 'name': current_user.name, 'avatar': current_user.avatar})
+
+
+@rest.get('/scoreboard')
+def scoreboard():
+    # todo: pagination
+    session = DBSession()
+
+    users = session.query(User).all()
+    sort = list(sorted(users, key=lambda x: x.wins - x.looses))
+
+    return jsonify([player.dictify() for player in sort])

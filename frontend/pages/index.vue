@@ -6,6 +6,9 @@
     <button class="btn" @click="join_lobby">
       Присоединиться к лобби
     </button>
+    <button class="btn" @click="view_scoreboard">
+      Топ игроков
+    </button>
   </div>
 </template>
 
@@ -34,6 +37,9 @@ export default Vue.extend({
     },
     join_lobby () {
       this.$router.push('join')
+    },
+    view_scoreboard () {
+      this.$router.push('scoreboard')
     },
     lobby_created (args: LobbyCreated) {
       this.$router.push('lobby')

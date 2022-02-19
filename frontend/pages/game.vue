@@ -117,6 +117,7 @@
                   <div class="flex flex-row space-x-2">
                     <input
                       v-model.number="move.ore_request_amount"
+                      :max="$game.game_manager.session.market_state.total_ore"
                       class="w-24 px-2 border rounded-2xl outline-none"
                       min="0"
                       type="number"
@@ -227,17 +228,34 @@ export default Vue.extend({
       return this.$game.game_manager.get_player(this.$auth.user.id)
     }
   },
-  watch: {
-    scrollDownOnNewMessage () {
-      const msg = this.$refs[this.$game.game_manager.messages.length - 1] as Element
-      console.log(msg)
-      msg.scrollIntoView({ behavior: 'smooth' })
-    }
+  mounted () {
+    this.$socket.on('game_new_message', () => {
+      this.$nextTick(() => {
+        // @ts-ignore
+        const msg = this.$refs[this.$game.game_manager.messages.length - 1][0] as Vue
+        console.log(this.$refs, msg, msg.$el)
+        msg.$el.scrollIntoView({ behavior: 'smooth' })
+      })
+    })
+    this.$socket.on('game_updated', () => {
+      const current = this.selectedPlayer
+
+      this.$nextTick(() => {
+        for (const player of this.$game.game_manager.session.players) {
+          if (player.user.id === current.user.id) {
+            this.selectedPlayer = player
+            break
+          }
+        }
+      })
+    })
   },
   methods: {
     send_message () {
-      if (this.chatMessage && this.chatMessage.length > 0) {
-        this.$game.game_manager.send_message(this.chatMessage)
+      const msg = this.chatMessage.trim()
+
+      if (msg && msg.length > 0) {
+        this.$game.game_manager.send_message(msg)
         this.chatMessage = ''
       }
     },

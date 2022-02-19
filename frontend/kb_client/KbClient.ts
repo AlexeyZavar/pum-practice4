@@ -19,7 +19,9 @@ export class GameManager {
           user: {
             id: '1',
             avatar: 'https://avatarfiles.alphacoders.com/307/thumb-1920-307713.jpg',
-            name: 'AlexeyZavar'
+            name: 'AlexeyZavar',
+            wins: 69,
+            looses: 0
           },
           money: 10_000,
           workshops: 2,
@@ -31,7 +33,9 @@ export class GameManager {
           user: {
             id: '2',
             avatar: 'https://avatarfiles.alphacoders.com/302/thumb-1920-302953.png',
-            name: 'Hu Tao'
+            name: 'Hu Tao',
+            wins: 69,
+            looses: 0
           },
           money: 20_000,
           workshops: 3,
@@ -75,7 +79,9 @@ export class GameManager {
       user: {
         id: 'SYSTEM',
         avatar: 'https://avatarfiles.alphacoders.com/307/thumb-1920-307195.gif',
-        name: 'СИСТЕМА'
+        name: 'СИСТЕМА',
+        wins: 69,
+        looses: 0
       },
       money: 1,
       workshops: 0,
