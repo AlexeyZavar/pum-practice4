@@ -43,7 +43,8 @@ export default {
       src: '~/plugins/gamePlugin',
       mode: 'client'
     },
-    '~/plugins/particlesPlugin'
+    '~/plugins/particlesPlugin',
+    '~/plugins/veevalidatePlugin'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -113,5 +114,8 @@ export default {
         autoprefixer: {}
       }
     }
-  }
+  },
+  transpile: [
+    'vee-validate/dist/rules'
+  ]
 }

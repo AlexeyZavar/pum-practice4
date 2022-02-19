@@ -40,5 +40,8 @@ class LobbyHub:
 
         return lobby
 
-    def get_lobby(self, user: User) -> Lobby:
+    def get_lobby_by_user(self, user: User) -> Lobby:
         return self.users[user.id]
+
+    def get_lobby_by_id(self, lobby_id: str) -> Lobby:
+        return self.lobbies[lobby_id]

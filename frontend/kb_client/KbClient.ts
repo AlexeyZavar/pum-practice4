@@ -130,8 +130,8 @@ export class KbClient {
   lobby_manager: LobbyManager
   game_manager: GameManager
 
-  constructor (token: string) {
-    this.token = token
+  constructor (token?: string) {
+    this.token = token ?? ''
     this.socket = io('http://localhost:3001/', { query: { jwt: token } })
 
     this.lobby_manager = new LobbyManager(this.socket)

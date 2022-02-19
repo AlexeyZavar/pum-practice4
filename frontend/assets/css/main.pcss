@@ -14,15 +14,24 @@ body {
   @apply border-white;
 }
 
+::selection {
+  @apply bg-purple-400;
+}
+
 .btn {
-  @apply p-4 border rounded-2xl;
+  @apply p-4 w-full border rounded-2xl;
   @apply transition duration-200;
-  @apply hover:bg-purple-400;
+  @apply hover:bg-purple-400/80;
+}
+
+.btn:disabled {
+  @apply opacity-70;
+  @apply hover:bg-transparent;
 }
 
 .inp {
   @apply outline-none;
-  @apply p-3 border rounded-2xl;
+  @apply p-3 w-full border rounded-2xl;
   @apply text-2xl text-black font-bold text-center;
 }
 
@@ -30,10 +39,9 @@ body {
   @apply py-4 flex flex-col space-y-4;
 }
 
-.error-box {
-  @apply p-4 main-container;
-  @apply text-center bg-sky-200 text-red-500;
-  @apply border rounded-2xl;
+.error-msg {
+  @apply absolute top-0 right-2;
+  @apply text-red-400;
 }
 
 input::-ms-reveal,

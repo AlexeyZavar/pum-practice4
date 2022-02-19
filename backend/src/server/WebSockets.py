@@ -51,12 +51,12 @@ class KBPumNamespace(Namespace):
 
     @ws_authenticated
     def on_join_lobby(self, message=None):
+        lobby_id = message['lobby_id']
+
         if lobby_hub.has_lobby(current_user):
             self.app.logger.warn('User tried to join a lobby while being in the lobby.')
             self.emit('lobby_probe', {'success': False}, room=request.sid)
             return
-
-        lobby_id = message['lobby_id']
 
         if not lobby_hub.lobby_exists(lobby_id):
             self.app.logger.warn('User tried to join a nonexistent lobby.')
@@ -72,7 +72,7 @@ class KBPumNamespace(Namespace):
 
     @ws_authenticated
     def on_lobby_user_ready_switch(self, message=None):
-        lobby = lobby_hub.get_lobby(current_user)
+        lobby = lobby_hub.get_lobby_by_user(current_user)
         lobby.user_ready_switch(current_user)
 
         self.emit('lobby_updated', lobby.dictify(), room=lobby.lobby_id)

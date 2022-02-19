@@ -1,9 +1,8 @@
 <template>
   <img
-    v-if="valid"
     :alt="user.name"
     :class="{'w-8 h-8': size === 'mini', 'w-16 h-16': size === 'small', 'w-24 h-24': size === 'medium'}"
-    :src="user.avatar"
+    :src="valid ? user.avatar : 'https://avatarfiles.alphacoders.com/305/305492.jpg'"
     class="rounded-full"
   >
 </template>
@@ -26,26 +25,35 @@ export default Vue.extend({
   },
   data () {
     return {
-      valid: false
+      valid: true
     }
   },
   watch: {
     user: {
       immediate: true,
       deep: true,
-      async handler (val) {
-        try {
-          const res = await this.$axios.get(val.avatar)
-          this.valid = res.status === 200
-
-          return
-        } catch (err) {
-          this.valid = err.message.includes('Network Error')
-
-          return
-        }
-
+      async handler () {
+        await this.validateImage()
+      }
+    }
+  },
+  async mounted () {
+    await this.validateImage()
+  },
+  methods: {
+    async validateImage () {
+      if (!this.user.avatar) {
         this.valid = false
+        return
+      }
+
+      try {
+        const res = await this.$axios.get(this.user.avatar, { progress: false })
+        this.valid = res.status === 200
+
+        return
+      } catch (err: any) {
+        this.valid = err.message.includes('Network Error')
       }
     }
   }
