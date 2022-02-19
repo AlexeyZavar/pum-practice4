@@ -8,7 +8,7 @@
       Присоединиться
     </button>
     <button class="btn" @click="$router.push('/')">
-      Вернуться назад
+      ←
     </button>
   </div>
 </template>

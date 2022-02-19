@@ -5,6 +5,7 @@ from flask_jwt_extended import current_user, get_current_user
 from flask_socketio import Namespace, join_room
 
 from src.server.Authentication import ws_authenticated
+from src.server.Database import DBSession, User
 from src.server.sessions.LobbyHub import LobbyHub
 from src.server.sessions.SessionHub import SessionHub
 
@@ -101,5 +102,19 @@ class KBPumNamespace(Namespace):
             self.emit('game_new_message', {'user_id': None, 'date': now(), 'text': message})
 
         session.messages_queue.clear()
+
+        if session.ended:
+            db_session = DBSession()
+
+            alive = session.get_alive_players()
+
+            for player in session.players:
+                user = db_session.get(User, player.user.id)
+                if player in alive:
+                    user.wins += 1
+                else:
+                    user.looses += 1
+
+            db_session.commit()
 
         self.emit('game_updated', session.dictify(), room=session.session_id)

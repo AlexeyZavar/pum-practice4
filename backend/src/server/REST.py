@@ -67,6 +67,6 @@ def scoreboard():
     session = DBSession()
 
     users = session.query(User).all()
-    sort = list(sorted(users, key=lambda x: x.wins - x.looses))
+    sort = list(sorted(users, key=lambda x: x.wins - x.looses, reverse=True))
 
     return jsonify([player.dictify() for player in sort])
