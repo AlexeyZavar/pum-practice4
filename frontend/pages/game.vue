@@ -15,11 +15,16 @@
         <chat-message v-for="(message, i) in $game.game_manager.messages" :key="i" :ref="i" :message="message" />
       </div>
       <div class="relative">
-        <input v-model="chatMessage" class="pl-12 p-4 w-full border-y outline-none" type="text" @keydown.enter="send_message">
+        <input
+          v-model="chatMessage"
+          class="pl-12 p-4 w-full border-y outline-none"
+          type="text"
+          @keydown.enter="send_message"
+        >
         <user-avatar
+          :user="$game.game_manager.get_player($auth.user.id).user"
           class="absolute left-2 bottom-3"
           size="mini"
-          :user="$game.game_manager.get_player($auth.user.id).user"
         />
       </div>
     </div>
@@ -43,7 +48,7 @@
                 {{ player.dead ? ' (банкрот)' : '' }}
               </option>
             </select>
-            <img v-if="hideModal" src="~/assets/images/eye.svg" alt="" width="24" @click="hideModal = false">
+            <img v-if="hideModal" alt="" src="~/assets/images/eye.svg" width="24" @click="hideModal = false">
           </div>
           <div class="mt-16 p-4 flex justify-center">
             <user-avatar :user="selectedPlayer.user" size="medium" />
@@ -120,7 +125,7 @@
                 <p class="uppercase font-bold">
                   Твой ход!
                 </p>
-                <img v-if="!hideModal" src="~/assets/images/eye.svg" alt="" width="24" @click="hideModal = true">
+                <img v-if="!hideModal" alt="" src="~/assets/images/eye.svg" width="24" @click="hideModal = true">
               </div>
               <div class="w-2/5 flex flex-col space-y-4">
                 <div class="flex flex-row space-x-4 justify-between">
@@ -155,7 +160,7 @@
                   <div class="flex flex-row space-x-2">
                     <input
                       v-model.number="move.sell_request_amount"
-                      :max="current_player.airships"
+                      :max="$game.game_manager.current_player.airships"
                       class="inp2"
                       min="0"
                       type="number"
@@ -167,8 +172,8 @@
                     <input
                       v-model.number="move.sell_request_price"
                       :max="$game.game_manager.session.market_state.maximal_price"
-                      min="0"
                       class="inp2"
+                      min="0"
                       type="number"
                     >
                     <img alt="" src="~/assets/images/money.svg" width="24">
@@ -181,8 +186,9 @@
                   <div class="flex flex-row space-x-2">
                     <input
                       v-model.number="move.airships_amount"
-                      :min="0"
+                      :max="canBuild"
                       class="inp2"
+                      min="0"
                       type="number"
                     >
                     <img alt="" src="~/assets/images/airship.svg" width="24">
@@ -216,7 +222,7 @@ export default Vue.extend({
   layout: 'game',
   data () {
     // @ts-ignore
-    const selectedPlayer: Player = this.$game.game_manager.get_player(this.$auth.user.id)
+    const selectedPlayer: Player = this.$game.game_manager.current_player
 
     return {
       selectedPlayer,
@@ -236,9 +242,9 @@ export default Vue.extend({
     modalShown () {
       return !this.$game.game_manager.session.ended && this.$game.game_manager.session?.queue[0] === this.$auth.user?.id && !this.hideModal
     },
-    current_player () {
-      // @ts-ignore
-      return this.$game.game_manager.get_player(this.$auth.user.id)
+    canBuild () {
+      const player = this.$game.game_manager.current_player
+      return player.workshops > player.ore ? player.ore : player.workshops
     }
   },
   mounted () {

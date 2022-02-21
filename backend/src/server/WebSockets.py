@@ -7,6 +7,7 @@ from flask import Flask, request
 from flask_jwt_extended import current_user, get_current_user
 from flask_socketio import Namespace, join_room
 
+from src.game.AI import AI
 from src.server.Authentication import ws_authenticated
 from src.server.Database import DBSession, User
 from src.server.sessions.LobbyHub import LobbyHub
@@ -139,6 +140,9 @@ class KBPumNamespace(Namespace):
             alive = session.get_alive_players()
 
             for player in session.players:
+                if isinstance(player, AI):
+                    continue
+
                 user = db_session.get(User, player.user.id)
                 if player in alive:
                     user.wins += 1

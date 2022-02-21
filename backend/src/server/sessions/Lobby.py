@@ -1,5 +1,6 @@
 from typing import List
 
+from src.game.AI import AI
 from src.game.Player import Player
 from src.game.Session import Session
 from src.server.Database import User
@@ -30,6 +31,7 @@ class Lobby:
 
     def create_session(self):
         players = [Player(item.user) for item in self.users]
+        players.append(AI())
         session = Session(self.lobby_id, players)
 
         return session

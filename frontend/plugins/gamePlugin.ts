@@ -33,8 +33,18 @@ export function getToken () {
   }
 }
 
+function getId (token: string) {
+  if (token && token !== '') {
+    const part = token.split('.')[1]
+    const obj = JSON.parse(atob(part))
+    return obj.sub
+  }
+}
+
 const socket: Plugin = (_, inject) => {
-  const client = Vue.observable(new KbClient(getToken()))
+  const token = getToken()
+  const userId = getId(token)
+  const client = Vue.observable(new KbClient(token, userId))
 
   inject('socket', client.socket)
   inject('game', client)

@@ -25,6 +25,10 @@ class Session:
         self.queue: List[Player] = list(players)
         random.shuffle(self.queue)
 
+        from .AI import AI
+        while isinstance(self.queue[0], AI):  # todo: possible infinite loop..
+            random.shuffle(self.queue)
+
         self.initial_player = self.queue[0]
 
         self.month: int = 1

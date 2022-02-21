@@ -34,7 +34,7 @@ app.config['SECRET_KEY'] = '@leXeyZav@R!!_!!-+!.!Ap!*'
 app.config['JWT_SECRET_KEY'] = '@leXeyZav1@R!!_!!-+!.!Ap!*2'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 9600000
 app.config['JWT_TOKEN_LOCATION'] = ['query_string', 'headers']
-app.config['COLLECT_MOVES'] = False
+app.config['COLLECT_MOVES'] = True
 
 CORS(app)
 jwt.init_app(app)

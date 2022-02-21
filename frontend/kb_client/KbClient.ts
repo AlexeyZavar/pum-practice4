@@ -9,9 +9,11 @@ export class GameManager {
   session: Session
   messages: Message[]
   private socket: Socket
+  private user_id: string
 
-  constructor (socket: Socket) {
+  constructor (socket: Socket, userId: string) {
     this.socket = socket
+    this.user_id = userId
     this.session = {
       id: 'none',
       players: [
@@ -60,6 +62,10 @@ export class GameManager {
     this.socket.on('game_new_message', args => this.game_new_message(args))
   }
 
+  get current_player () {
+    return this.get_player(this.user_id)
+  }
+
   send_message (text: string) {
     this.socket.emit('game_send_message', { text })
   }
@@ -68,7 +74,7 @@ export class GameManager {
     this.socket.emit('game_make_move', move)
   }
 
-  get_player (userId: string): Player | undefined {
+  get_player (userId: string): Player {
     for (const player of this.session.players) {
       if (player.user.id === userId) {
         return player
@@ -136,11 +142,11 @@ export class KbClient {
   lobby_manager: LobbyManager
   game_manager: GameManager
 
-  constructor (token?: string) {
+  constructor (token: string, userId: string) {
     this.token = token ?? ''
     this.socket = io('http://localhost:3001/', { query: { jwt: token } })
 
     this.lobby_manager = new LobbyManager(this.socket)
-    this.game_manager = new GameManager(this.socket)
+    this.game_manager = new GameManager(this.socket, userId)
   }
 }
