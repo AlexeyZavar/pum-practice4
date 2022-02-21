@@ -22,7 +22,7 @@
           @keydown.enter="send_message"
         >
         <user-avatar
-          :user="$game.game_manager.get_player($auth.user.id).user"
+          :user="$game.game_manager.current_player.user"
           class="absolute left-2 bottom-3"
           size="mini"
         />
