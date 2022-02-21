@@ -1,4 +1,7 @@
 import datetime
+import json
+from copy import deepcopy
+from typing import Dict
 
 from flask import Flask, request
 from flask_jwt_extended import current_user, get_current_user
@@ -11,6 +14,7 @@ from src.server.sessions.SessionHub import SessionHub
 
 lobby_hub = LobbyHub()
 session_hub = SessionHub()
+moves = []
 
 
 def now():
@@ -28,19 +32,27 @@ class KBPumNamespace(Namespace):
 
         if lobby_hub.has_lobby(current_user):
             lobby = lobby_hub.remove_user(current_user)
-            self.emit('lobby_updated', lobby.dictify(), room=lobby.lobby_id)
+
+            if lobby.users:
+                self.emit('lobby_updated', lobby.dictify(), room=lobby.lobby_id)
+            else:
+                lobby_hub.remove_lobby(lobby)
 
         if session_hub.has_session(current_user):
             session = session_hub.get_session(current_user)
             session.remove_player(current_user)
 
-            db_session = DBSession()
-            user = db_session.get(User, current_user.id)
-            user.looses += 1
+            if not session.ended:
+                db_session = DBSession()
+                user = db_session.get(User, current_user.id)
+                user.looses += 1
 
-            db_session.commit()
+                db_session.commit()
 
-            self.emit('game_updated', session.dictify(), room=session.session_id)
+            if session.players:
+                self.emit('game_updated', session.dictify(), room=session.session_id)
+            else:
+                session_hub.remove_session(session)
 
     @ws_authenticated
     def on_create_lobby(self, message=None):
@@ -87,10 +99,12 @@ class KBPumNamespace(Namespace):
 
         if lobby.all_ready:
             session = lobby.create_session()
-            session_hub.start(session)
+            session_hub.start_session(session)
 
             self.emit('game_updated', session.dictify(), room=lobby.lobby_id)
             self.emit('game_started', room=lobby.lobby_id)
+
+            lobby_hub.remove_lobby(lobby)
 
     @ws_authenticated
     def on_game_send_message(self, message=None):
@@ -102,6 +116,15 @@ class KBPumNamespace(Namespace):
     @ws_authenticated
     def on_game_make_move(self, message=None):
         session = session_hub.get_session(current_user)
+
+        if self.app.config['COLLECT_MOVES']:
+            message_copy: Dict = deepcopy(message)
+            message_copy['user'] = session.get_player(current_user).dictify()
+            message_copy['market_state'] = session.market_state.dictify(session.p)
+
+            moves.append(message_copy)
+            with open('./moves.json', 'w', encoding='utf-8') as f:
+                f.write(json.dumps(moves))
 
         session.trigger_move(get_current_user(), **message)
 
@@ -123,5 +146,7 @@ class KBPumNamespace(Namespace):
                     user.looses += 1
 
             db_session.commit()
+
+            session_hub.remove_session(session)
 
         self.emit('game_updated', session.dictify(), room=session.session_id)

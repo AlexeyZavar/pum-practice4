@@ -4,12 +4,13 @@ from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
-from src import KBPumNamespace, rest, jwt
-
 dictConfig({
     'version': 1,
     'formatters': {'default': {
-        'format': '[%(asctime)s %(levelname)s] %(message)s',
+        'level': 'debug',
+        'format': ' {name:12} {asctime}   {levelname:10} | {message}',
+        'datefmt': '%I:%M:%S %p',
+        'style': '{'
     }},
     'handlers': {'wsgi': {
         'class': 'logging.StreamHandler',
@@ -20,17 +21,20 @@ dictConfig({
         'level': 'INFO',
         'handlers': ['wsgi']
     },
-    'Session': {
+    'session': {
         'level': 'DEBUG',
         'handlers': ['wsgi']
     }
 })
+
+from src import KBPumNamespace, rest, jwt  # noqa
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '@leXeyZav@R!!_!!-+!.!Ap!*'
 app.config['JWT_SECRET_KEY'] = '@leXeyZav1@R!!_!!-+!.!Ap!*2'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 9600000
 app.config['JWT_TOKEN_LOCATION'] = ['query_string', 'headers']
+app.config['COLLECT_MOVES'] = False
 
 CORS(app)
 jwt.init_app(app)

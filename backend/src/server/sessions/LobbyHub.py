@@ -1,9 +1,13 @@
+import logging
 import uuid
 from typing import Tuple, Dict
 
 from src.server.Database import User
 from src.server.sessions.Lobby import Lobby
 from src.server.sessions.LobbyUser import LobbyUser
+
+logger = logging.getLogger('lobby_hub')
+logger.setLevel(logging.DEBUG)
 
 
 class LobbyHub:
@@ -22,6 +26,19 @@ class LobbyHub:
 
     def has_lobby(self, user: User) -> bool:
         return user.id in self.users
+
+    def remove_lobby(self, lobby: Lobby):
+        del self.lobbies[lobby.lobby_id]
+
+        to_remove = []
+        for k, v in self.users.items():
+            if v.lobby_id == lobby.lobby_id:
+                to_remove.append(k)
+
+        for item in to_remove:
+            del self.users[item]
+
+        logger.info(f'Removed {lobby.lobby_id}')
 
     def lobby_exists(self, lobby_id: str) -> bool:
         return lobby_id in self.lobbies

@@ -3,7 +3,9 @@
     <!-- CHAT -->
     <div class="w-1/5 h-screen border-r flex flex-col">
       <div class="shrink-0 h-24 p-4 bg-poetry-600 flex justify-center items-center">
-        <p class="text-center text-white uppercase text-2xl">
+        <p
+          class="text-center text-white uppercase text-2xl"
+        >
           Чат
         </p>
       </div>
@@ -12,7 +14,14 @@
       >
         <chat-message v-for="(message, i) in $game.game_manager.messages" :key="i" :ref="i" :message="message" />
       </div>
-      <input v-model="chatMessage" class="p-4 border-y outline-none" type="text" @keydown.enter="send_message">
+      <div class="relative">
+        <input v-model="chatMessage" class="pl-12 p-4 w-full border-y outline-none" type="text" @keydown.enter="send_message">
+        <user-avatar
+          class="absolute left-2 bottom-3"
+          size="mini"
+          :user="$game.game_manager.get_player($auth.user.id).user"
+        />
+      </div>
     </div>
     <!-- GAME -->
     <div class="w-4/5 h-screen flex flex-col">
@@ -34,6 +43,7 @@
                 {{ player.dead ? ' (банкрот)' : '' }}
               </option>
             </select>
+            <img v-if="hideModal" src="~/assets/images/eye.svg" alt="" width="24" @click="hideModal = false">
           </div>
           <div class="mt-16 p-4 flex justify-center">
             <user-avatar :user="selectedPlayer.user" size="medium" />
@@ -106,9 +116,12 @@
         <div :class="{'hidden': !modalShown}" class="w-full h-full fixed z-10 overflow-auto bg-black/40">
           <div class="mt-[10%] w-4/5 bg-white">
             <div class="w-full p-8 flex flex-col space-y-4 text-2xl justify-center items-center">
-              <p class="uppercase font-bold">
-                Твой ход!
-              </p>
+              <div class="flex flex-row space-x-4">
+                <p class="uppercase font-bold">
+                  Твой ход!
+                </p>
+                <img v-if="!hideModal" src="~/assets/images/eye.svg" alt="" width="24" @click="hideModal = true">
+              </div>
               <div class="w-2/5 flex flex-col space-y-4">
                 <div class="flex flex-row space-x-4 justify-between">
                   <p class="w-24">
@@ -154,6 +167,7 @@
                     <input
                       v-model.number="move.sell_request_price"
                       :max="$game.game_manager.session.market_state.maximal_price"
+                      min="0"
                       class="inp2"
                       type="number"
                     >
@@ -201,7 +215,8 @@ export default Vue.extend({
   name: 'GamePage',
   layout: 'game',
   data () {
-    const selectedPlayer: Player = this.$game.game_manager.session.players[0]
+    // @ts-ignore
+    const selectedPlayer: Player = this.$game.game_manager.get_player(this.$auth.user.id)
 
     return {
       selectedPlayer,
@@ -213,12 +228,13 @@ export default Vue.extend({
         sell_request_amount: 0,
         sell_request_price: 0,
         build_workshop: false
-      }
+      },
+      hideModal: false
     }
   },
   computed: {
     modalShown () {
-      return !this.$game.game_manager.session.ended && this.$game.game_manager.session?.queue[0] === this.$auth.user?.id
+      return !this.$game.game_manager.session.ended && this.$game.game_manager.session?.queue[0] === this.$auth.user?.id && !this.hideModal
     },
     current_player () {
       // @ts-ignore

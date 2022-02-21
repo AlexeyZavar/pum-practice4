@@ -11,7 +11,7 @@ from .Player import Player
 AIRSHIP_COST = 2_000
 WORKSHOP_COST = 5_000
 
-logger = logging.getLogger()
+logger = logging.getLogger('session')
 logger.setLevel(logging.DEBUG)
 
 
@@ -184,6 +184,14 @@ class Session:
         if self.initial_player.user.id == self.queue[0].user.id:
             self.trigger_next_month()
 
+        # hack for the PyCharm hints...
+        from .AI import AI
+
+        possible_ai = self.queue[0]
+        if isinstance(possible_ai, AI):
+            ai_move = possible_ai.get_move(self)
+            self.trigger_move(**ai_move)
+
     def trigger_workshops_build(self):
         done = []
 
@@ -209,6 +217,8 @@ class Session:
             player.airships += request.amount
 
             logger.info(f'Built {request.amount} airships for {player}')
+
+        self.airship_requests.clear()
 
     def trigger_ore_requests(self):
         logger.info('Ore requests triggered')

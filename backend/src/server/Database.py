@@ -26,6 +26,12 @@ class User(Base):
             'looses': self.looses
         }
 
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return f'User(id={self.id}, name={self.name})'
+
 
 engine = create_engine('sqlite:///data.db', echo=False, connect_args={'check_same_thread': False})  # connect to db
 Base.metadata.create_all(engine)  # run init
