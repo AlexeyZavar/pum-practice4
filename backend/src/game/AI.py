@@ -3,7 +3,7 @@ import pickle
 import random
 import uuid
 
-import pandas as pd
+import numpy as np
 from sklearn.multioutput import MultiOutputRegressor
 
 from src import Player, Session
@@ -35,7 +35,7 @@ class AI(Player):
         minimal_price = session.market_state.state['minimal_price']
         maximal_price = session.market_state.state['maximal_price']
 
-        x = [{
+        x = {
             "money": self.money,
             "workshops": self.workshops,
             "ore": self.ore,
@@ -45,8 +45,8 @@ class AI(Player):
             "market_airships_demand": airships_demand,
             "market_minimal_price": minimal_price,
             "market_maximal_price": maximal_price
-        }]
-        x_df = pd.DataFrame(x)
+        }
+        x_df = np.array([list(x.values())])
         predicted = MODEL.predict(x_df)[0]
 
         move = {
