@@ -63,7 +63,6 @@ def me():
 
 @rest.get('/scoreboard')
 def scoreboard():
-    # todo: pagination
     session = DBSession()
 
     users = session.query(User).all()

@@ -28,7 +28,7 @@ class Session:
         random.shuffle(self.queue)
 
         from .AI import AI
-        while isinstance(self.queue[0], AI):  # todo: possible infinite loop..
+        while isinstance(self.queue[0], AI):
             random.shuffle(self.queue)
 
         self.initial_player = self.queue[0]

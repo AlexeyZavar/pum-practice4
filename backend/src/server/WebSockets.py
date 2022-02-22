@@ -48,7 +48,7 @@ class KBPumNamespace(Namespace):
 
                 db_session.commit()
 
-            if session.players:
+            if session.players and not session.only_bots_alive:
                 self.emit('game_updated', session.dictify(), room=session.session_id)
             else:
                 session_hub.remove_session(session)
