@@ -41,7 +41,7 @@ jwt.init_app(app)
 
 app.register_blueprint(rest)
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins='*')
 
 socketio.on_namespace(KBPumNamespace(app))
 

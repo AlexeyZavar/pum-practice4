@@ -37,18 +37,19 @@ class AI(Player):
         maximal_price = session.market_state.state['maximal_price']
 
         x = {
-            "money": self.money,
-            "workshops": self.workshops,
-            "ore": self.ore,
-            "airships": self.airships,
-            "market_level": session.market_state.level,
-            "market_total_ore": total_ore,
-            "market_airships_demand": airships_demand,
-            "market_minimal_price": minimal_price,
-            "market_maximal_price": maximal_price
+            'money': self.money,
+            'workshops': self.workshops,
+            'ore': self.ore,
+            'airships': self.airships,
+            'market_level': session.market_state.level,
+            'market_total_ore': total_ore,
+            'market_airships_demand': airships_demand,
+            'market_minimal_price': minimal_price,
+            'market_maximal_price': maximal_price
         }
         x_df = np.array([list(x.values())])
         with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
             predicted = MODEL.predict(x_df)[0]
 
         move = {
