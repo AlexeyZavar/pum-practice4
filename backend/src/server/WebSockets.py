@@ -29,8 +29,6 @@ class KBPumNamespace(Namespace):
 
     @ws_authenticated
     def on_disconnect(self):
-        self.app.logger.info('disconnected')
-
         if lobby_hub.has_lobby(current_user):
             lobby = lobby_hub.remove_user(current_user)
 
@@ -63,7 +61,7 @@ class KBPumNamespace(Namespace):
             self.app.logger.warn('User tried to create a lobby while being in the lobby.')
             return
 
-        lobby, lobby_user = lobby_hub.create_lobby(get_current_user())
+        lobby, lobby_user = lobby_hub.create_lobby(get_current_user(), message['months'], message['bots'])
 
         join_room(lobby.lobby_id)
 

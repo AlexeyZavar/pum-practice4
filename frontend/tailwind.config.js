@@ -108,6 +108,13 @@ module.exports = {
           900: '#111213'
         },
         default: '#093d8d'
+      },
+      animation: {
+        'spin-slow': 'spin 3s linear infinite'
+      },
+      backgroundImage: {
+        'cursor-circle': 'url("data:image/svg+xml,%3csvg width=\'100%25\' height=\'100%25\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3crect width=\'100%25\' height=\'100%25\' fill=\'none\' rx=\'100\' ry=\'100\' stroke=\'white\' stroke-width=\'7\' stroke-dasharray=\'40%25%2c 37%25\' stroke-dashoffset=\'100\' stroke-linecap=\'butt\'/%3e%3c/svg%3e")',
+        'cursor-circle-blacked': 'url("data:image/svg+xml,%3csvg width=\'100%25\' height=\'100%25\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3crect width=\'100%25\' height=\'100%25\' fill=\'none\' rx=\'100\' ry=\'100\' stroke=\'black\' stroke-width=\'7\' stroke-dasharray=\'40%25%2c 37%25\' stroke-dashoffset=\'100\' stroke-linecap=\'butt\'/%3e%3c/svg%3e")'
       }
     },
     fontFamily: {

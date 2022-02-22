@@ -4,10 +4,10 @@
       Идентификатор лобби
     </p>
     <input v-model="lobby_id" class="inp tracking-widest" maxlength="8" type="text">
-    <button class="btn" @click="join_lobby">
+    <button v-cursor-btn class="btn" @click="join_lobby">
       Присоединиться
     </button>
-    <button class="btn" @click="$router.push('/')">
+    <button v-cursor-btn class="btn" @click="$router.push('/')">
       ←
     </button>
   </div>

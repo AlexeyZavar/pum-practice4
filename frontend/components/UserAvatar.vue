@@ -1,5 +1,6 @@
 <template>
   <img
+    v-cursor-img
     :alt="user.name"
     :class="{'w-8 h-8': size === 'mini', 'w-16 h-16': size === 'small', 'w-24 h-24': size === 'medium'}"
     :src="valid ? user.avatar : 'https://avatarfiles.alphacoders.com/305/305492.jpg'"

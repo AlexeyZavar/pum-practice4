@@ -8,8 +8,11 @@ from src.server.sessions.LobbyUser import LobbyUser
 
 
 class Lobby:
-    def __init__(self, lobby_id: str):
+    def __init__(self, lobby_id: str, months: int, bots: int):
         self.lobby_id = lobby_id
+        self.months = months
+        self.bots = bots
+
         self.users: List[LobbyUser] = []
 
     def add_user(self, user: User) -> LobbyUser:
@@ -31,8 +34,10 @@ class Lobby:
 
     def create_session(self):
         players = [Player(item.user) for item in self.users]
-        players.append(AI())
-        session = Session(self.lobby_id, players)
+        for _ in range(self.bots):
+            players.append(AI())
+
+        session = Session(self.lobby_id, players, self.months)
 
         return session
 

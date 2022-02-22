@@ -1,12 +1,12 @@
 <template>
   <div class="main-container">
-    <button class="btn" @click="create_lobby">
+    <button v-cursor-btn class="btn" @click="create_lobby">
       Создать лобби
     </button>
-    <button class="btn" @click="join_lobby">
+    <button v-cursor-btn class="btn" @click="join_lobby">
       Присоединиться к лобби
     </button>
-    <button class="btn" @click="view_scoreboard">
+    <button v-cursor-btn class="btn" @click="view_scoreboard">
       Топ игроков
     </button>
   </div>
@@ -22,27 +22,19 @@ interface LobbyCreated {
 export default Vue.extend({
   name: 'IndexPage',
   mounted () {
-    this.$socket.on('lobby_created', this.lobby_created)
-
     if (this.$game.token === '') {
       location.reload()
     }
   },
-  beforeDestroy () {
-    this.$socket.offAny(this.lobby_created)
-  },
   methods: {
     create_lobby () {
-      this.$socket.emit('create_lobby')
+      this.$router.push('create')
     },
     join_lobby () {
       this.$router.push('join')
     },
     view_scoreboard () {
       this.$router.push('scoreboard')
-    },
-    lobby_created (args: LobbyCreated) {
-      this.$router.push('lobby')
     }
   }
 })

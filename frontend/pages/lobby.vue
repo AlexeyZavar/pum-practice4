@@ -15,7 +15,12 @@
       </div>
     </div>
     <transition name="todo">
-      <button v-if="$game.lobby_manager.lobby.users.length > 1" class="btn" @click="$game.lobby_manager.ready_switch()">
+      <button
+        v-if="$game.lobby_manager.lobby.users.length > 1"
+        v-cursor-btn
+        class="btn"
+        @click="$game.lobby_manager.ready_switch()"
+      >
         {{ $game.lobby_manager.ready ? 'Я не готов' : 'Я готов' }}
       </button>
     </transition>

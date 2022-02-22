@@ -16,8 +16,9 @@ logger.setLevel(logging.DEBUG)
 
 
 class Session:
-    def __init__(self, session_id: str, players: List[Player]):
+    def __init__(self, session_id: str, players: List[Player], months: int):
         self.session_id: str = session_id
+        self.months = months
 
         self.ended = False
 
@@ -116,10 +117,13 @@ class Session:
         # build workshops
         self.trigger_workshops_build()
 
+        self.month += 1
+
         # and finally kill players with money < 0
         self.kill_players()
 
-        self.month += 1
+        if not self.ended:
+            self.messages_queue.append('Следующий месяц!')
 
     def kill_players(self):
         for player in self.players:
@@ -130,12 +134,11 @@ class Session:
 
                 logger.info(f'{player} is dead now')
 
-        # todo: 12 months game
-        if self.p == 1 or self.p == 0:
+        if self.p == 1 or self.p == 0 or self.month == self.months + 1:
             self.ended = True
 
             if self.p > 0:
-                self.messages_queue.append(f'Игра окончена на {self.month} месяце! Выиграл(-и): ' + ','.join(
+                self.messages_queue.append(f'Игра окончена на {self.month} месяце! Выиграл(-и): ' + ', '.join(
                     player.user.name for player in self.get_alive_players()))
             else:
                 self.messages_queue.append(f'Игра окончена на {self.month} месяце! Все обанкротились.')
@@ -352,6 +355,7 @@ class Session:
             'id': self.session_id,
             'players': [player.dictify() for player in self.players],
             'month': self.month,
+            'months': self.months,
             'market_state': self.market_state.dictify(self.p),
             'queue': [player.user.id for player in self.queue],
             'ended': self.ended

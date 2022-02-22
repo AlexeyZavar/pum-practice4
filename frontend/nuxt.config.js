@@ -44,7 +44,8 @@ export default {
       mode: 'client'
     },
     '~/plugins/particlesPlugin',
-    '~/plugins/veevalidatePlugin'
+    '~/plugins/veevalidatePlugin',
+    '~/plugins/cursorPlugin'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

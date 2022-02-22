@@ -22,7 +22,7 @@
         Авторизироваться
       </button>
     </validation-observer>
-    <button class="btn" @click="$router.push('/register')">
+    <button v-cursor-btn class="btn" @click="$router.push('/register')">
       ←
     </button>
   </div>

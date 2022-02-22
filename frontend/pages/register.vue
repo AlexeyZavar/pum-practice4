@@ -30,11 +30,11 @@
         </p>
         <user-avatar :user="form" />
       </div>
-      <button :disabled="invalid" class="btn" @click="register_account">
+      <button v-cursor-btn :disabled="invalid" class="btn" @click="register_account">
         Зарегистрироваться
       </button>
     </validation-observer>
-    <button class="btn" @click="$router.push('login')">
+    <button v-cursor-btn class="btn" @click="$router.push('login')">
       →
     </button>
   </div>

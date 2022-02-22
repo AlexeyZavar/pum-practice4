@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <button class="btn" @click="main_menu">
+    <button v-cursor-btn class="btn" @click="main_menu">
       ←
     </button>
     <p class="text-center text-3xl">

@@ -15,9 +15,9 @@ class LobbyHub:
         self.lobbies: Dict[str, Lobby] = {}
         self.users: Dict[str, Lobby] = {}
 
-    def create_lobby(self, creator: User) -> Tuple[Lobby, LobbyUser]:
+    def create_lobby(self, creator: User, months: int, bots: int) -> Tuple[Lobby, LobbyUser]:
         lobby_id = uuid.uuid4().hex[:8]
-        lobby = Lobby(lobby_id)
+        lobby = Lobby(lobby_id, months, bots)
 
         self.lobbies[lobby_id] = lobby
         _, lobby_user = self.add_user(lobby_id, creator)

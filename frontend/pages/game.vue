@@ -201,7 +201,7 @@
                   </div>
                   <input v-model="move.build_workshop" type="checkbox">
                 </div>
-                <button class="uppercase btn" @click="make_move">
+                <button v-cursor-btn class="uppercase btn2" @click="make_move">
                   Готово
                 </button>
               </div>
@@ -240,6 +240,7 @@ export default Vue.extend({
   },
   computed: {
     modalShown () {
+      // @ts-ignore
       return !this.$game.game_manager.session.ended && this.$game.game_manager.session?.queue[0] === this.$auth.user?.id && !this.hideModal
     },
     canBuild () {
@@ -248,6 +249,12 @@ export default Vue.extend({
     }
   },
   mounted () {
+    const cursor = document.getElementById('cursor-dot')
+    cursor!.classList.add('cursor-dot-blacked')
+
+    const circle = document.getElementById('cursor-circle')
+    circle!.classList.add('cursor-circle-blacked')
+
     this.$socket.on('game_new_message', () => {
       this.$nextTick(() => {
         // @ts-ignore
@@ -270,6 +277,13 @@ export default Vue.extend({
         this.selectedPlayer = this.$game.game_manager.session.players[0]
       })
     })
+  },
+  beforeDestroy () {
+    const cursor = document.getElementById('cursor-dot')
+    cursor!.classList.remove('cursor-dot-blacked')
+
+    const circle = document.getElementById('cursor-circle')
+    circle!.classList.remove('cursor-circle-blacked')
   },
   methods: {
     send_message () {
@@ -310,5 +324,11 @@ select {
 
 .inp2 {
   @apply w-24 px-2 border border-black rounded-2xl outline-none;
+}
+
+.btn2 {
+  @apply p-4 w-full border border-black rounded-2xl;
+  @apply transition duration-200;
+  @apply hover:bg-gray-50;
 }
 </style>
