@@ -1,5 +1,6 @@
 import logging
 import pickle
+import random
 import uuid
 
 import pandas as pd
@@ -19,6 +20,7 @@ logger.setLevel(logging.DEBUG)
 
 
 def normalize_price(price: float):
+    price += random.choice([-150, -100, -50, 0, 50, 100, 150])
     return round(price * 2, -2) // 2
 
 
@@ -65,7 +67,7 @@ class AI(Player):
         move['airships_amount'] = round(move['airships_amount'])
         move['sell_request_amount'] = round(move['sell_request_amount'])
         move['sell_request_price'] = normalize_price(move['sell_request_price'])
-        move['build_workshop'] = move['build_workshop'] > 0.1  # todo: more moves with build_workshop in train data
+        move['build_workshop'] = move['build_workshop'] > 0.5
 
         # impossible moves fixes
         if move['ore_request_amount'] > total_ore:
@@ -89,21 +91,31 @@ class AI(Player):
         logger.info(f'AI {self.user.id} normalized: {move}')
 
         # dummy moves fixes
+
+        # too many ores or not enough money
         if self.ore > 6 or self.money <= 8000:
             move['ore_request_amount'] = 0
 
+        # too many airships or not enough money
         if self.airships > 6 or self.money <= 8000:
             move['airships_amount'] = 0
 
+        # well...
+        if self.workshops > 5:
+            move['build_workshop'] = False
+
+        # too low sell price
         if move['sell_request_price'] < maximal_price * 0.8:
             move['sell_request_price'] = normalize_price(maximal_price * 0.85)
 
-        if self.money <= 4000 and self.airships > 0:
-            move['airships_amount'] = self.airships
-            move['sell_request_price'] = maximal_price - 700  # just to make sure AI will stay alive
+        # just to make sure AI will stay alive if it has airships
+        if self.money <= 6000 and self.airships > 0:
+            move['sell_request_amount'] = self.airships
+            move['sell_request_price'] = maximal_price - 700
 
-        if self.workshops > 5:
-            move['build_workshop'] = False
+        # do not build if not enough money
+        if self.money <= 6000 and move['airships_amount'] > 0:
+            move['airships_amount'] = 0
 
         logger.info(f'AI {self.user.id} fixed: {move}')
 

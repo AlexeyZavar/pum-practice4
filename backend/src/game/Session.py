@@ -21,6 +21,7 @@ class Session:
         self.months = months
 
         self.ended = False
+        self.finalized = False
 
         self.players: List[Player] = players
         self.queue: List[Player] = list(players)
@@ -85,6 +86,11 @@ class Session:
     def p(self):
         return len(self.get_alive_players())
 
+    @property
+    def only_bots_alive(self):
+        from .AI import AI
+        return all(isinstance(user, AI) for user in self.get_alive_players())
+
     def trigger_next_month(self):
         logger.info('Next month triggered')
 
@@ -132,19 +138,23 @@ class Session:
         for player in self.players:
             if not player.dead and player.money < 0:
                 player.dead = True
+                self.queue.remove(player)
 
                 self.messages_queue.append(f'Игрок {player.user.name} обанкротился!')
 
                 logger.info(f'{player} is dead now')
 
-        if self.p == 1 or self.p == 0 or self.month == self.months + 1:
+        if self.p == 1 or self.p == 0 or self.month == self.months + 1 or self.only_bots_alive or self.ended:
             self.ended = True
 
-            if self.p > 0:
-                self.messages_queue.append(f'Игра окончена на {self.month} месяце! Выиграл(-и): ' + ', '.join(
-                    player.user.name for player in self.get_alive_players()))
-            else:
-                self.messages_queue.append(f'Игра окончена на {self.month} месяце! Все обанкротились.')
+            if not self.finalized:
+                if self.p > 0:
+                    self.messages_queue.append(f'Игра окончена на {self.month} месяце! Выиграл(-и): ' + ', '.join(
+                        player.user.name for player in self.get_alive_players()))
+                else:
+                    self.messages_queue.append(f'Игра окончена на {self.month} месяце! Все обанкротились.')
+
+                self.finalized = True
 
     def trigger_move(self, user: User, ore_request_amount: int, ore_request_price: int, airships_amount: int,
                      sell_request_amount: int, sell_request_price: int, build_workshop: bool):
@@ -193,6 +203,11 @@ class Session:
 
         if self.initial_player.user.id == self.queue[0].user.id:
             self.trigger_next_month()
+
+        if not self.queue:
+            self.ended = True
+            self.kill_players()
+            return
 
         # hack for the PyCharm hints...
         from .AI import AI
