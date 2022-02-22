@@ -2,6 +2,7 @@ import logging
 import pickle
 import random
 import uuid
+import warnings
 
 import numpy as np
 from sklearn.multioutput import MultiOutputRegressor
@@ -47,7 +48,8 @@ class AI(Player):
             "market_maximal_price": maximal_price
         }
         x_df = np.array([list(x.values())])
-        predicted = MODEL.predict(x_df)[0]
+        with warnings.catch_warnings():
+            predicted = MODEL.predict(x_df)[0]
 
         move = {
             'ore_request_amount': predicted[0],
