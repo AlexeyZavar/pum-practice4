@@ -201,7 +201,7 @@
                   </div>
                   <input v-model="move.build_workshop" type="checkbox">
                 </div>
-                <button v-cursor-btn class="uppercase btn2" @click="make_move">
+                <button v-cursor-btn class="uppercase btn2" :disabled="continueDisabled" @click="make_move">
                   Готово
                 </button>
               </div>
@@ -235,7 +235,8 @@ export default Vue.extend({
         sell_request_price: 0,
         build_workshop: false
       },
-      hideModal: false
+      hideModal: false,
+      continueDisabled: false
     }
   },
   computed: {
@@ -263,6 +264,7 @@ export default Vue.extend({
       })
     })
     this.$socket.on('game_updated', () => {
+      this.continueDisabled = false
       const current = this.selectedPlayer
 
       this.$nextTick(() => {
@@ -295,6 +297,7 @@ export default Vue.extend({
       }
     },
     make_move () {
+      this.continueDisabled = true
       this.$game.game_manager.make_move(this.move)
 
       this.move = {
@@ -330,5 +333,9 @@ select {
   @apply p-4 w-full border border-black rounded-2xl;
   @apply transition duration-200;
   @apply hover:bg-gray-50;
+}
+
+.btn2:disabled {
+  @apply bg-gray-200;
 }
 </style>
