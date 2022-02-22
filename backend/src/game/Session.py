@@ -59,6 +59,9 @@ class Session:
         self.queue.remove(player)
         self.players.remove(player)
 
+        if not self.players:
+            return
+
         if player == self.initial_player:
             self.initial_player = self.queue[0]
 
